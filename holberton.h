@@ -11,5 +11,5 @@
 #include <sys/stat.h>
 
 void check_paths(char **args, char **envp);
-void child_process(char *str, int get);
+void child_process(char *str, char **args, char **env);
 #endif

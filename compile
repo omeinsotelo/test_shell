@@ -1,0 +1,3 @@
+#!/bin/bash
+echo -e "\e[32mCompiling\e[0m"
+gcc -Wall -Werror -Wextra -pedantic -Wno-format child.c prompt.c check.c -o prompt

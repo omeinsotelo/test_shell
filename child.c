@@ -5,17 +5,15 @@
  *
  *
  */
-void child_process(char *str, int get)
+void child_process(char *str, char **args, char **env)
 {
-	char *token;
-	int cont, *wait_status = NULL;
+	int *wait_status = NULL;
 	pid_t child;
 
-	cont = 0;
 	child = fork();
 	if (!child)
 	{
-		if (execve(av[0], av, NULL) == -1)
+		if (execve(str, args, env) == -1)
 			perror("shell");
 	}
 	if (child > 0)
