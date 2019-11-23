@@ -1,51 +1,66 @@
 #include "holberton.h"
-/**
- * child_process - proccess child.
- *
- *
- *
- */
-void check_paths(char **args, char **env)
+
+int lenMalloc(char *pointer)
 {
-	char *pathtocheck = malloc(100);
-	char *cop = malloc(100);
-	char *pathvar = malloc(200);
-	char *paths[10];
-	char *tok;
-	int state, pathcounter = 0;
-	struct stat *properties = malloc(sizeof(struct stat));
-	printf("checking paths\n");
-	pathtocheck = strcpy(pathtocheck, args[0]);
-	state = stat(pathtocheck, properties);
-	strcpy(pathvar, getenv("PATH"));
-	printf("PATHS: %s\n", paths);
-	tok = strtok(pathvar, ":");
+	int len = 0;
+
+	while (*(pointer + len) != 0)
+		len++;
+
+	return (len);
+}
+
+char *_getenv(char *nameVar, char **env)
+{
+	int i = 0;
+	char *valueEnv = env[i];
+	char *nameEnv = strtok(valueEnv, "=");
+
+	while(strcmp(nameVar, nameEnv) !=  0 && nameEnv && env[i] != 0)
+	{
+		valueEnv = env[i++];
+		nameEnv = strtok(valueEnv, "=");
+	}
+
+	nameEnv = strtok(NULL, "\n");
+
+	if (env[i] == 0)
+		return (NULL);
+
+	return (nameEnv);
+}
+
+char *check_paths(char **args, char **env)
+{
+	char *fullPath, *tok;
+	char *valueVar = _getenv("PATH", env);
+	struct stat properties;
+	int i = 0, sizeMalloc = 0;
+
+
+	if (valueVar == NULL)
+		return; //validar error
+
+	tok = strtok(valueVar, ":");
 
 	while(tok)
 	{
-		paths[pathcounter] = tok;
+
+		sizeMalloc = lenMalloc(tok) + lenMalloc(args[0]) + 1;
+		fullPath = malloc(sizeof(char *) * sizeMalloc);
+
+		strcat(fullPath, tok);
+		strcat(fullPath, "/");
+		strcat(fullPath, args[0]);
+
+		if(stat(fullPath, &properties) == 0)
+			return (fullPath);
+
 		tok = strtok(NULL, ":");
-		pathcounter++;
+
+		free(fullPath);
 	}
-	paths[pathcounter] = NULL;
-	pathcounter = 0;
-	strcpy(cop, args[0]);
-	while(paths[pathcounter])
-	{
-		strcpy(pathtocheck, paths[pathcounter]);
-		strcat(pathtocheck, "/");
-		strcat(pathtocheck, cop);
-		args[0] = pathtocheck;
-		printf("%s\n", pathtocheck);
-		pathcounter++;
-		state = stat(pathtocheck, properties);
-		if (state == 0)
-		{
-			printf("match: %d\n", state);
-			child_process(args[0], args, env);
-			break;
-		}
-	}
-	printf("command state: %d\n", state);
-	(void) env;
+
+	return (NULL);
+
 }

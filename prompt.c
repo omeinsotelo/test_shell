@@ -14,7 +14,7 @@ int main(int ac, char **argv, char **envp)
 	{
 		write(STDOUT_FILENO, "$ ", 2);
 		get = getline(&str, &count, stdin);
-		printf("process: %d\n", getpid());
+		/*printf("process: %d\n", getpid());*/
 		if (get == EOF)
 		{
 			write(STDOUT_FILENO, "\n", 1);
@@ -28,9 +28,8 @@ int main(int ac, char **argv, char **envp)
 		    cont++;
 		  }
                 av[cont] = NULL;
-		printf("should enter to check\n");
-		check_paths(av, envp);
-		/*child_process(str, get);*/
+		/*printf("should enter to check\n");*/
+		child_process(str, av, envp);
 	}
 	return (0);
 
